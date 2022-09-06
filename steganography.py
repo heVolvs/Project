@@ -1,14 +1,7 @@
-import decdb
-import endb
-import sqlite3
 from PIL import Image
  
 # Convert encoding data into 8-bit binary
 # form using ASCII value of characters
-
-# Database connect
-db_con = sqlite3.connect("endb.sqlite")
-db_con2 = sqlite3.connect("decdb.sqlite")
 
 
 def genData(data):
@@ -95,13 +88,13 @@ def encode(data , uploaded_file):
  
     new_img_name = "stegano2.png"
     newimg.save(new_img_name, str(new_img_name.split(".")[1].upper()))
-    endb.create_entry(db_con,newimg)
+    
 # Decode the data in the image
-def decode(uploaded_file2):
-    img = uploaded_file2
+def decode(img):
     image = Image.open(img, 'r')
  
     data = ''
+
     imgdata = iter(image.getdata())
  
     while (True):
@@ -122,20 +115,3 @@ def decode(uploaded_file2):
         if (pixels[-1] % 2 != 0):
             return data
  
-# Main Function
-def main():
-    a = int(input(":: Welcome to Steganography ::\n"
-                        "1. Encode\n2. Decode\n"))
-    if (a == 1):
-        encode()
- 
-    elif (a == 2):
-        print("Decoded Word :  " + decode())
-    else:
-        raise Exception("Enter correct input")
- 
-# Driver Code1
-if __name__ == '__main__' :
- 
-    # Calling main function
-    main()
