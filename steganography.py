@@ -1,9 +1,7 @@
 from PIL import Image
- 
+import logging
 # Convert encoding data into 8-bit binary
 # form using ASCII value of characters
-
-
 def genData(data):
  
         # list of binary codes
@@ -13,7 +11,12 @@ def genData(data):
         for i in data:
             newd.append(format(ord(i), '08b'))
         return newd
- 
+
+#-----------------------------------------------------------------------------------
+logging.basicConfig(filename='Stegano.log', filemode='w',
+ format='%(asctime)s - "Encrypt" -  %(levelname)s - %(message)s',
+  datefmt='%d-%m-%y %H:%M:%S',
+  level= logging.INFO)
 # Pixels are modified according to the
 # 8-bit binary data and finally returned
 def modPix(pix, data):
@@ -44,7 +47,7 @@ def modPix(pix, data):
  
         # Eighth pixel of every set tells
         # whether to stop ot read further.
-        # 0 means keep reading; 1 means thec
+        # 0 means keep reading; 1 means check if
         # message is over.
         if (i == lendata - 1):
             if (pix[-1] % 2 == 0):
@@ -61,6 +64,8 @@ def modPix(pix, data):
         yield pix[0:3]
         yield pix[3:6]
         yield pix[6:9]
+
+#-----------------------------------------------------------------------------------
  
 def encode_enc(newimg, data):
     w = newimg.size[0]
@@ -75,12 +80,15 @@ def encode_enc(newimg, data):
             y += 1
         else:
             x += 1
+
+#-----------------------------------------------------------------------------------
  
 # Encode data into image
 def encode(data , uploaded_file):
     image = Image.open(uploaded_file, 'r')
  
     if (len(data) == 0):
+        logging.error("Data is empty")
         raise ValueError('Data is empty')
  
     newimg = image.copy()
@@ -88,6 +96,9 @@ def encode(data , uploaded_file):
  
     new_img_name = "stegano2.png"
     newimg.save(new_img_name, str(new_img_name.split(".")[1].upper()))
+    
+#-----------------------------------------------------------------------------------
+
     
 # Decode the data in the image
 def decode(img):
@@ -115,3 +126,5 @@ def decode(img):
         if (pixels[-1] % 2 != 0):
             return data
  
+
+#-----------------------------------------------------------------------------------
