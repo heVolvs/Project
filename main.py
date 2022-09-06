@@ -1,6 +1,7 @@
 from fastapi import FastAPI,File, UploadFile
 import logging
 import steganography as st
+from fastapi.responses import FileResponse
 #Logging parameters
 logging.basicConfig(filename='Stegano.log', filemode='w',
  format='%(asctime)s - "Encrypt" -  %(levelname)s - %(message)s',
@@ -22,7 +23,7 @@ async def create_upload_file(data, uploaded_file: UploadFile = File(...)):
     with open(file_location, "wb+") as file_object:
         file_object.write(uploaded_file.file.read())
     st.encode(data,uploaded_file.filename)
-    return {"info": f"file '{uploaded_file.filename}' saved at '{file_location}'{data}"} 
+    return FileResponse('stegano2.png') 
     
     
 @app.post("/Decrypt/")
